@@ -9,6 +9,17 @@ def get_player(player):
 
     return player
 
+def isLegal(trump, card):
+    if card.suit == trump:
+        return True
+    elif card.rank == 2:
+        if   card.suit == 'H' and trump == 'D': return True
+        elif card.suit == 'D' and trump == 'H': return True
+        elif card.suit == 'S' and trump == 'C': return True
+        elif card.suit == 'C' and trump == 'S': return True
+
+    return False
+
 
 suits = [
     'H',
