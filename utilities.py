@@ -10,25 +10,41 @@ def get_player(player):
     return player
 
 
-suit = [
+suits = [
     'H',
     'D',
     'S',
     'C'
 ]
 
-rank = [
+suit_lookup = {
+    'H': 'Hearts',
+    'D': 'Diamonds',
+    'S': 'Spades',
+    'C': 'Clubs'
+}
+
+ranks = [
     0,
     1,
     2,
     3,
     4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12
+    5
+]
+
+rank_lookup = {
+    0: '9',
+    1: '10',
+    2: 'Jack',
+    3: 'Queen',
+    4: 'King',
+    5: 'Ace'
+}
+
+sample_players = [
+    'aa',
+    'bb',
+    'cc',
+    'dd'
 ]
