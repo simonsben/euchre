@@ -9,17 +9,6 @@ def get_player(player):
 
     return player
 
-def isLegal(trump, card):
-    if card.suit == trump:
-        return True
-    elif card.rank == 2:
-        if   card.suit == 'H' and trump == 'D': return True
-        elif card.suit == 'D' and trump == 'H': return True
-        elif card.suit == 'S' and trump == 'C': return True
-        elif card.suit == 'C' and trump == 'S': return True
-
-    return False
-
 
 suits = [
     'H',
@@ -33,6 +22,13 @@ suit_lookup = {
     'D': 'Diamonds',
     'S': 'Spades',
     'C': 'Clubs'
+}
+
+suit_pair = {
+    'H': 'D',
+    'D': 'H',
+    'S': 'C',
+    'C': 'S'
 }
 
 ranks = [

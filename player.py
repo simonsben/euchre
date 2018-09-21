@@ -1,4 +1,4 @@
-from utilities import isLegal
+
 
 class player:
     def __init__(self, id, name):
@@ -6,19 +6,30 @@ class player:
         self.hand = []
         self.name = name
 
+    # Adds a card to the players hand
     def add_card(self, card):
         self.hand.append(card)
+
         if len(self.hand) > 5:
             print('Mans has more than 5 cards!')
 
     # Determine which cards can be played for this trick
-    def trickOptions(self, trump):
+    def trickOptions(self, trump, lead):
         options = []
-        for card in self.hand:
-            if isLegal(trump, card):
+        for card in self.hand:  # Check each card
+            if card.is_legal(trump, lead):    # Check if card can be played
                 options.append(card)
 
+        if len(options) == 0:   # If player doesn't have the suit lead
+            options = self.hand
+
         return options
+
+    def playCard(self, card_id):
+        for card in self.hand:
+            if card.index == card_id: return card
+
+        raise ValueError('the specified card_id ' + str(card_id) + 'is not present in hand.')
 
     def __str__(self):
         output = self.name
