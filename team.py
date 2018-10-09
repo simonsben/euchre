@@ -17,6 +17,20 @@ class team:
     def count_tricks(self):
         return len(self.tricks)
 
+    # Give the team another point and check if team has won
+    def hand_over(self):
+        if len(self.tricks) == 5:
+            self.points += 2
+        if len(self.tricks):
+            self.points += 1
+        self.tricks = []
+
+        return self.points >= 10
+
+    # Check if player is on the team
+    def is_on_team(self, player):
+        return self.members.__contains__(player)
+
     def __str__(self):
         output = 'Team: \n'
         for player in self.members:

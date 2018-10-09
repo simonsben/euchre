@@ -25,16 +25,20 @@ class player:
         return options
 
     # Return given card
-    def playCard(self, card_id):
-        for card in self.hand:
-            if card.index == card_id: return card
-
-        raise ValueError('the specified card_id ' + str(card_id) + 'is not present in hand.')
+    def playCard(self, card):
+        self.hand.remove(card)
 
     # Clear hand for re-deal
     def clearHand(self):
         self.hand = []
 
+    def list_cards(self, trump, lead):
+        for i, card in enumerate(self.trickOptions(trump, lead)):
+            print(str(i) + ': ' + str(card))
+
+        return len(self.hand)
+
+    # New to string method
     def __str__(self):
         output = self.name + ': '
         if len(self.hand) == 0:

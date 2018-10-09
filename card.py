@@ -1,18 +1,20 @@
 from utilities import rank_lookup, suit_lookup, suit_pair
 
-
+# Class to define card
 class card:
     def __init__(self, suit, rank):
         self.suit = suit
         self.rank = rank
         self.index = -1
 
+    # Get cards value within trump
     def get_trump_rank(self, trump):
         if self.rank == 2:
             if self.suit == trump: return 7
             return 6
         return self.rank
 
+    # Returns whether self is higher value than other card
     def is_bigger(self, other_card, trump, lead):
         self_trump = self.is_trump(trump)
         other_trump = other_card.is_trump(trump)
@@ -34,6 +36,7 @@ class card:
             return False  # Self is off-suit non-trump
         return self.rank > other_card.rank  # Both are lead suit
 
+    # Returns whether self is trump
     def is_trump(self, trump):
         if self.suit == trump:
             return True
@@ -42,8 +45,11 @@ class card:
 
         return False
 
+    # Returns whether card can be played this trick
     def is_legal(self, trump, lead):
-        if lead == trump:  # If its trump
+        if lead == None: # If nothing has been lead
+            return True
+        elif lead == trump:  # If its trump
             if self.is_trump(trump): return True
             return False
 

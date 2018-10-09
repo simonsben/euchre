@@ -8,8 +8,13 @@ def get_player(player):
 
 def get_input(prompt, options):
     answer = input(prompt)
+    if type(options[0]) == int:
+            answer = int(answer)
+
     while answer not in options:
         answer = input('This it not a valid option, choose again. ' + str(options))
+        if type(options[0]) == int:
+            answer = int(answer)
 
     return answer
 
@@ -59,10 +64,11 @@ sample_players = [
     'dd'
 ]
 
-def ask_order_up(prompt, players):
+def ask_order_up(prompt, players, leader):
     prompt_options = ['y', 'n']
 
-    for player in players:
+    for i in range(leader, leader+4):
+        player = players[get_player(i)]
         print(player.name, ' is up')
         print(player)
 
@@ -72,11 +78,12 @@ def ask_order_up(prompt, players):
 
     return -1
 
-def ask_other_suits(prompt, prompt_options, players):
+def ask_other_suits(prompt, prompt_options, players, leader):
     pass_charater = 'p'
     prompt_options.append(pass_charater)
 
-    for player in players:
+    for i in range(leader, leader+4):
+        player = players[get_player(i)]
         print(player.name, ' is up')
         print(player)
 
