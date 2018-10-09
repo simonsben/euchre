@@ -8,21 +8,21 @@ def random_number(max):
 def get_player(player):
     return player % 4
 
-
-def get_input(prompt, options):
-    answer = input(prompt)
+def parse_input(input, options):
     if type(options[0]) == int:
         try:
-            answer = int(answer)
+            input = int(input)
         except ValueError:
-            answer = -1
+            input = -1
+
+    return input
+
+def get_input(prompt, options):
+    answer = parse_input(input(prompt), options)
+
     while answer not in options:
-        answer = input('This it not a valid option, choose again. ' + str(options))
-        if type(options[0]) == int:
-            try:
-                answer = int(answer)
-            except ValueError:
-                answer = -1
+        answer = parse_input(input('This it not a valid option, choose again. ' + str(options)), options)
+
 
     return answer
 
@@ -83,10 +83,14 @@ def ask_order_up(prompt, players, leader):
         print(player)
 
         answer = get_input(prompt, prompt_options)
-        if answer != 'n':
-            return player.id
+        if answer != 'n': # If suit chosen and not partner of dealer
+            if i == leader + 1:
+                going_alone = True
+            else:
+                going_alone = get_input('Do you want to go alone?', prompt_options) == 'y'
+            return player.id, going_alone, player
 
-    return -1
+    return -1, False, None
 
 
 def ask_other_suits(prompt, prompt_options, players, leader):
@@ -100,6 +104,7 @@ def ask_other_suits(prompt, prompt_options, players, leader):
 
         answer = get_input(prompt, prompt_options)
         if answer != pass_charater:
-            return answer
+            going_alone = get_input('Do you want to go alone?', ['y', 'n']) == 'y'
+            return answer, going_alone, player
 
-    return pass_charater
+    return pass_charater, False, None

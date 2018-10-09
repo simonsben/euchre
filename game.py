@@ -14,7 +14,6 @@ class game:
     def __init__(self):  # Initialize a new game
         dealer_id = random_number(3)  # Choose random first dealer
         self.dealer = dealer_id  # Assign the dealer ID
-        self.turn = get_player(dealer_id + 1)  # Assign who's turn it is
 
         self.gen_players()  # Generate players
         self.deck = deck()  # Generate the deck
@@ -22,6 +21,8 @@ class game:
         self.kitty = []  # Initialize the kitty
         self.hands = []  # Initialize hands
         self.trump = None  # Initialize trump
+        self.alone = -1 # Initialize whether someone is alone
+        self.caller = None # Initialize person who called trump
 
         self.make_teams()  # Split players into teams
         self.deal_cards()  # Divide cards between players
@@ -37,7 +38,7 @@ class game:
             while not self.trump:
                 self.choose_trump()
                 if self.trump:
-                    print('Trump chosen', self.trump)
+                    print('Trump chosen', self.trump, 'alone:', self.alone)
                 else:
                     print('Trump not chosen, re-dealing..')
 
@@ -58,10 +59,13 @@ class game:
                  self.players[self.dealer].name + '? (y/n)'
 
         # Check if players want to order up dealer
-        order_up = ask_order_up(prompt, self.players, self.dealer + 1)
+        order_up, going_alone, caller = ask_order_up(prompt, self.players, self.dealer + 1)
+        partner_is_dealer = (caller.id + 2) % 4 == self.dealer
 
         if order_up != -1:  # If dealer is ordered up
             self.trump = self.kitty[0].suit  # Set suit for hand
+            self.alone = going_alone or partner_is_dealer
+            self.caller = caller
             return
 
         # If dealer wasn't ordered up
@@ -71,12 +75,14 @@ class game:
         prompt = 'Would you like to call anything except ' + no_go_suit
 
         # Check if players want to call
-        suit_choice = ask_other_suits(prompt, suit_options, self.players, self.dealer + 1)
+        suit_choice, going_alone, caller = ask_other_suits(prompt, suit_options, self.players, self.dealer + 1)
 
         if suit_choice == 'p':  # If everyone passed
             self.re_deal()
             return
         self.trump = suit_choice  # Set trump for hand
+        self.alone = going_alone
+        self.caller = caller
 
     def play_hand(self):
         leader = self.dealer + 1  # Track who has the lead
@@ -86,15 +92,22 @@ class game:
         print('\nHand done\n')
 
         # Total tricks and check if team has won
-        game_over = self.teams[0].hand_over()
-        game_over = game_over or self.teams[1].hand_over()
+        zero_over, zero_win = self.teams[0].hand_over(self.alone, self.caller)
+        one_over, one_win = self.teams[1].hand_over(self.alone, self.caller)
 
-        return game_over
+        print('Team zero won\n') if zero_win else print('Team one won\n')
+
+        return zero_over or one_over
 
     def play_trick(self, leader):
         current_trick = trick()  # Initialize trick
+        skip_player = -1
+        if self.alone:
+            skip_player = get_player(self.caller.id + 2)
 
-        for i in range(leader + 1, leader + 5):  # For each player after dealer
+        for i in range(leader, leader + 4):  # For each player after dealer
+            if get_player(i) == skip_player:
+                continue
             player = self.players[get_player(i)]  # Given player
 
             print(player.name + ' is up, cards are: ')

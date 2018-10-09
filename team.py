@@ -18,14 +18,23 @@ class team:
         return len(self.tricks)
 
     # Give the team another point and check if team has won
-    def hand_over(self):
-        if len(self.tricks) == 5:
-            self.points += 2
-        if len(self.tricks):
+    def hand_over(self, alone, caller):
+        team_won = len(self.tricks) >= 3
+        if not team_won:
+            pass
+        elif not caller in self.members:  # If team didn't call
+            if len(self.tricks) >= 3:
+                self.points += 2
+        elif len(self.tricks) == 5:  # If team won all tricks
+            if alone:
+                self.points += 4
+            else:
+                self.points += 2
+        elif len(self.tricks) >= 3:  # If team won (3 or 4 tricks)
             self.points += 1
         self.tricks = []
 
-        return self.points >= 10
+        return self.points >= 10, team_won
 
     # Check if player is on the team
     def is_on_team(self, player):
