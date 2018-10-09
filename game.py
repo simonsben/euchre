@@ -1,8 +1,11 @@
-from utilities import random_number, get_player, sample_players
+from utilities import random_number, get_player, \
+    sample_players, ask_order_up, ask_other_suits, suits
 from deck import deck
 from player import player
 from team import team
+from copy import deepcopy
 
+# NOTE:
 # Players are indexed from 0 to 3, going clockwise
 
 class game:
@@ -20,6 +23,56 @@ class game:
 
         self.make_teams()   # Split players into teams
         self.deal_cards()   # Divide cards between players
+
+        self.play_game()
+
+    # Play game
+    def play_game(self):
+        # print(self)
+        while not self.trump:
+            self.choose_trump()
+            if self.trump:
+                print('Trump chosen', self.trump)
+            else:
+                print('Trump not chosen, re-dealing..')
+
+
+    # Choose trump for the hand
+    def choose_trump(self):
+        print('Card up is', self.kitty[0]) # Show flipped card
+
+        # Initialize prompt to user
+        prompt = 'Do you want to order up ' + \
+                 self.players[self.dealer].name + '? (y/n)'
+
+        # Check if players want to order up dealer
+        order_up = ask_order_up(prompt, self.players)
+
+        if order_up != -1: # If dealer is ordered up
+            self.trump = self.kitty[0].suit # Set suit for hand
+            return
+
+        # If dealer wasn't ordered up
+        no_go_suit = self.kitty[0].suit # Suit that can't be chosen
+        suit_options = deepcopy(suits)  # All suits
+        suit_options.remove(no_go_suit)        # Remove no-go suit
+        prompt = 'Would you like to call anything except ' + no_go_suit
+
+        # Check if players want to call
+        suit_choice = ask_other_suits(prompt, suit_options, self.players)
+
+        if suit_choice == 'p':  # If everyone passed
+            self.re_deal()
+            return
+        self.trump = suit_choice
+
+
+
+    # Re-deal deck (if no suit is chosen)
+    def re_deal(self):
+        self.dealer = get_player(self.dealer + 1)
+        for player in self.players:
+            player.clearHand()
 
     # Divide cards between players
     def deal_cards(self):

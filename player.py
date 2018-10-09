@@ -31,12 +31,16 @@ class player:
 
         raise ValueError('the specified card_id ' + str(card_id) + 'is not present in hand.')
 
+    # Clear hand for re-deal
+    def clearHand(self):
+        self.hand = []
+
     def __str__(self):
-        output = self.name
+        output = self.name + ': '
         if len(self.hand) == 0:
             output += ' has no cards'
         else:
             for card in self.hand:
-                output += ' '  + card.__str__()
+                output += card.__str__() + ' '
 
-        return output
+        return output + '\n'

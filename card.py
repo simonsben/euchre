@@ -52,5 +52,5 @@ class card:
         rank = rank_lookup.get(self.rank)
         index = self.index
 
-        return suit_lookup.get(suit) + ' ' + rank + ' '  + str(index)
+        return rank + ' ' + suit_lookup.get(suit)
         # print('Suit', suit, 'Rank', rank, 'index', index)

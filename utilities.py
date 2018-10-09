@@ -4,11 +4,14 @@ def random_number(max):
     return randint(0, max)
 
 def get_player(player):
-    while player > 3:
-        player -= 4
+    return player % 4
 
-    return player
+def get_input(prompt, options):
+    answer = input(prompt)
+    while answer not in options:
+        answer = input('This it not a valid option, choose again. ' + str(options))
 
+    return answer
 
 suits = [
     'H',
@@ -55,3 +58,30 @@ sample_players = [
     'cc',
     'dd'
 ]
+
+def ask_order_up(prompt, players):
+    prompt_options = ['y', 'n']
+
+    for player in players:
+        print(player.name, ' is up')
+        print(player)
+
+        answer = get_input(prompt, prompt_options)
+        if answer != 'n':
+            return player.id
+
+    return -1
+
+def ask_other_suits(prompt, prompt_options, players):
+    pass_charater = 'p'
+    prompt_options.append(pass_charater)
+
+    for player in players:
+        print(player.name, ' is up')
+        print(player)
+
+        answer = get_input(prompt, prompt_options)
+        if answer != pass_charater:
+            return answer
+
+    return pass_charater
