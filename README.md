@@ -2,6 +2,12 @@
 
 Currently at the beginning of what (I hope) will turn into another big project for me...
 
+## Current state
+
+* Can generate a new game
+* Can enforce rules
+  * NOTE: main rules are Canadian loner and no stick the dealer
+
 ## Game (now)
 
 This stage of the project is simply making the mechanics for a euchure game.
