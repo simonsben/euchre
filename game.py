@@ -100,20 +100,25 @@ class game:
             card_index = get_input(prompt, list(range(num_cards)))
             card_played = player.hand[card_index]
 
-            current_trick.add_card(card_played) # Add card to trick
+            print('\n' + player.name + ' played ' + str(card_played) + '\n')
+
+            current_trick.add_card(card_played, self.trump) # Add card to trick
             player.playCard(card_played) # Remove card from hand
 
         card_index = current_trick.get_winner() # Index of card in trick
         player_id = (card_index - (leader + 1)) % 4 # Get player id from play index
 
-        player = self.players(player_id) # Player with winning card
+        player = self.players[player_id] # Player with winning card
 
         # Get winning team
-        team = self.teams[0]
-        if not self.teams[0].is_on_team(player):
-            team = self.teams[1]
+        team_zero_win = self.teams[0].is_on_team(player) # Check if team 0 won
+        win_team_index = 0
+        if team_zero_win: win_team_index = 1
 
-        team.add_trick(current_trick) # Give winning team the trick
+        winning_team = self.teams[win_team_index]
+        winning_team.add_trick(current_trick) # Give winning team the trick
+
+        print('\nTeam ' + str(win_team_index) + ' won the trick \n')
 
         return player_id
 
