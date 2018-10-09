@@ -26,13 +26,13 @@ class game:
         self.make_teams()  # Split players into teams
         self.deal_cards()  # Divide cards between players
 
-        self.play_game()
+        self.play_game()  # Start game
 
     # Play game
     def play_game(self):
-        game_over = False
+        game_over = False  # Initialize game over check
 
-        while not game_over:
+        while not game_over:  # Keep playing until one team wins
             # Choose trump
             while not self.trump:
                 self.choose_trump()
@@ -43,9 +43,11 @@ class game:
 
             # Play hand
             game_over = self.play_hand()
-            if game_over: # Check if game is done
+            if game_over:  # Check if game is done
                 print('Game over!')
                 break
+
+            self.re_deal()  # Re-deal the deck
 
     # Choose trump for the hand
     def choose_trump(self):
@@ -56,7 +58,7 @@ class game:
                  self.players[self.dealer].name + '? (y/n)'
 
         # Check if players want to order up dealer
-        order_up = ask_order_up(prompt, self.players, self.dealer+1)
+        order_up = ask_order_up(prompt, self.players, self.dealer + 1)
 
         if order_up != -1:  # If dealer is ordered up
             self.trump = self.kitty[0].suit  # Set suit for hand
@@ -69,7 +71,7 @@ class game:
         prompt = 'Would you like to call anything except ' + no_go_suit
 
         # Check if players want to call
-        suit_choice = ask_other_suits(prompt, suit_options, self.players, self.dealer+1)
+        suit_choice = ask_other_suits(prompt, suit_options, self.players, self.dealer + 1)
 
         if suit_choice == 'p':  # If everyone passed
             self.re_deal()
@@ -77,9 +79,11 @@ class game:
         self.trump = suit_choice  # Set trump for hand
 
     def play_hand(self):
-        leader = self.dealer + 1 # Track who has the lead
-        for i in range(5): # For each trick in the hand
+        leader = self.dealer + 1  # Track who has the lead
+        for i in range(5):  # For each trick in the hand
             leader = self.play_trick(leader)
+
+        print('\nHand done\n')
 
         # Total tricks and check if team has won
         game_over = self.teams[0].hand_over()
@@ -88,10 +92,10 @@ class game:
         return game_over
 
     def play_trick(self, leader):
-        current_trick = trick() # Initialize trick
+        current_trick = trick()  # Initialize trick
 
-        for i in range(leader+1, leader+5): # For each player after dealer
-            player = self.players[get_player(i)]    # Given player
+        for i in range(leader + 1, leader + 5):  # For each player after dealer
+            player = self.players[get_player(i)]  # Given player
 
             print(player.name + ' is up, cards are: ')
             num_cards = player.list_cards(self.trump, current_trick.lead)
@@ -102,21 +106,21 @@ class game:
 
             print('\n' + player.name + ' played ' + str(card_played) + '\n')
 
-            current_trick.add_card(card_played, self.trump) # Add card to trick
-            player.playCard(card_played) # Remove card from hand
+            current_trick.add_card(card_played, self.trump)  # Add card to trick
+            player.playCard(card_played)  # Remove card from hand
 
-        card_index = current_trick.get_winner() # Index of card in trick
-        player_id = (card_index - (leader + 1)) % 4 # Get player id from play index
+        card_index = current_trick.get_winner()  # Index of card in trick
+        player_id = (card_index - (leader + 1)) % 4  # Get player id from play index
 
-        player = self.players[player_id] # Player with winning card
+        player = self.players[player_id]  # Player with winning card
 
         # Get winning team
-        team_zero_win = self.teams[0].is_on_team(player) # Check if team 0 won
+        team_zero_win = self.teams[0].is_on_team(player)  # Check if team 0 won
         win_team_index = 0
         if team_zero_win: win_team_index = 1
 
         winning_team = self.teams[win_team_index]
-        winning_team.add_trick(current_trick) # Give winning team the trick
+        winning_team.add_trick(current_trick)  # Give winning team the trick
 
         print('\nTeam ' + str(win_team_index) + ' won the trick \n')
 
@@ -125,6 +129,7 @@ class game:
     # Re-deal deck (if no suit is chosen)
     def re_deal(self):
         self.dealer = get_player(self.dealer + 1)
+        self.trump = None
         for player in self.players:
             player.clearHand()
         self.deck.shuffle()

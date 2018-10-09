@@ -2,6 +2,7 @@ from utilities import suits, ranks
 from card import card
 from random import random
 
+
 # Class to define deck
 class deck:
     def __init__(self):
@@ -12,7 +13,7 @@ class deck:
     def fill_deck(self):
         self.cards = []
 
-        for suit in suits:    # For every suit
+        for suit in suits:  # For every suit
             for rank in ranks:  # For every card value
                 self.cards.append(card(suit, rank))
 

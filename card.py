@@ -1,5 +1,6 @@
 from utilities import rank_lookup, suit_lookup, suit_pair
 
+
 # Class to define card
 class card:
     def __init__(self, suit, rank):
@@ -47,7 +48,7 @@ class card:
 
     # Returns whether card can be played this trick
     def is_legal(self, trump, lead):
-        if lead == None: # If nothing has been lead
+        if lead == None:  # If nothing has been lead
             return True
         elif lead == trump:  # If its trump
             if self.is_trump(trump): return True

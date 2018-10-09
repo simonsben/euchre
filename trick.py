@@ -9,10 +9,10 @@ class trick:
     def add_card(self, card_played, trump):
         self.cards.append(card_played)  # Adds card to trick
 
-        if self.highest == None:    # If its the lead
+        if self.highest == None:  # If its the lead
             self.highest = card_played
             self.lead = card_played.suit
-        elif self.highest.is_bigger(card_played, trump, self.lead):    # If the new card is bigger
+        elif self.highest.is_bigger(card_played, trump, self.lead):  # If the new card is bigger
             self.highest = card_played
 
     # Return the winner of the trick
