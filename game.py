@@ -5,24 +5,25 @@ from player import player
 from team import team
 from copy import deepcopy
 
+
 # NOTE:
 # Players are indexed from 0 to 3, going clockwise
 
 class game:
-    def __init__(self): # Initialize a new game
-        dealer_id = random_number(3)    # Choose random first dealer
-        self.dealer = dealer_id     # Assign the dealer ID
-        self.turn = get_player(dealer_id + 1)   # Assign who's turn it is
+    def __init__(self):  # Initialize a new game
+        dealer_id = random_number(3)  # Choose random first dealer
+        self.dealer = dealer_id  # Assign the dealer ID
+        self.turn = get_player(dealer_id + 1)  # Assign who's turn it is
 
         self.gen_players()  # Generate players
         self.deck = deck()  # Generate the deck
 
-        self.kitty = []     # Initialize the kitty
-        self.hands = []     # Initialize hands
-        self.trump = None   # Initialize trump
+        self.kitty = []  # Initialize the kitty
+        self.hands = []  # Initialize hands
+        self.trump = None  # Initialize trump
 
-        self.make_teams()   # Split players into teams
-        self.deal_cards()   # Divide cards between players
+        self.make_teams()  # Split players into teams
+        self.deal_cards()  # Divide cards between players
 
         self.play_game()
 
@@ -36,10 +37,9 @@ class game:
             else:
                 print('Trump not chosen, re-dealing..')
 
-
     # Choose trump for the hand
     def choose_trump(self):
-        print('Card up is', self.kitty[0]) # Show flipped card
+        print('Card up is', self.kitty[0])  # Show flipped card
 
         # Initialize prompt to user
         prompt = 'Do you want to order up ' + \
@@ -48,14 +48,14 @@ class game:
         # Check if players want to order up dealer
         order_up = ask_order_up(prompt, self.players)
 
-        if order_up != -1: # If dealer is ordered up
-            self.trump = self.kitty[0].suit # Set suit for hand
+        if order_up != -1:  # If dealer is ordered up
+            self.trump = self.kitty[0].suit  # Set suit for hand
             return
 
         # If dealer wasn't ordered up
-        no_go_suit = self.kitty[0].suit # Suit that can't be chosen
+        no_go_suit = self.kitty[0].suit  # Suit that can't be chosen
         suit_options = deepcopy(suits)  # All suits
-        suit_options.remove(no_go_suit)        # Remove no-go suit
+        suit_options.remove(no_go_suit)  # Remove no-go suit
         prompt = 'Would you like to call anything except ' + no_go_suit
 
         # Check if players want to call
@@ -64,9 +64,7 @@ class game:
         if suit_choice == 'p':  # If everyone passed
             self.re_deal()
             return
-        self.trump = suit_choice
-
-
+        self.trump = suit_choice  # Set trump for hand
 
     # Re-deal deck (if no suit is chosen)
     def re_deal(self):
@@ -77,7 +75,7 @@ class game:
     # Divide cards between players
     def deal_cards(self):
         for i, card in enumerate(self.deck.cards):
-            if i  >= 20:
+            if i >= 20:
                 self.kitty.append(card)
             else:
                 self.players[get_player(i)].add_card(card)
@@ -99,7 +97,7 @@ class game:
     def __str__(self):
         output = ''
         for i, team in enumerate(self.teams):
-            output += 'Team ' + str(i+1) + '\n'
+            output += 'Team ' + str(i + 1) + '\n'
             for player in team.members:
                 output += player.__str__() + '\n'
             output += '\n'

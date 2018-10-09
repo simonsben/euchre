@@ -1,5 +1,4 @@
-
-
+# Class to define player
 class player:
     def __init__(self, id, name):
         self.id = id
@@ -17,14 +16,15 @@ class player:
     def trickOptions(self, trump, lead):
         options = []
         for card in self.hand:  # Check each card
-            if card.is_legal(trump, lead):    # Check if card can be played
+            if card.is_legal(trump, lead):  # Check if card can be played
                 options.append(card)
 
-        if len(options) == 0:   # If player doesn't have the suit lead
+        if len(options) == 0:  # If player doesn't have the suit lead
             options = self.hand
 
         return options
 
+    # Return given card
     def playCard(self, card_id):
         for card in self.hand:
             if card.index == card_id: return card
